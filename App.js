@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 //import "./App.css";
-import TextAreaInput from "./inputComponent";
-import {decodeMorse, morse} from "./morseCodes";
+import TextAreaInput from "./Components/inputComponent";
+import {morse} from "./Utils/morseCodes";
 
 class App extends Component {
   constructor() {
@@ -17,9 +17,9 @@ class App extends Component {
     const spacer = " ";
     let morseCode = [];
     console.log(e);
-    let text = e.toLowerCase();
-    for (let n = 0; n < text.length; n++) {
-      morseCode.push(morse[text[n]] || this.unknown);
+    if(e !== ""){
+    let text = [...e.toLowerCase()] ;
+    morseCode = text.map(inputText => morse[inputText] );
     }
     return morseCode.join(spacer);
   };
@@ -29,9 +29,7 @@ class App extends Component {
     let input = e.toLowerCase();
     let morseCode = input.split(" ");
     console.log(input);
-    for (var r = 0; r < morseCode.length; r++) {
-      decodeText.push(decodeMorse[morseCode[r]] || this.unknown);
-    }
+    decodeText = morseCode.map(inputCode => Object.keys(morse).find(key => morse[key] === inputCode));
     return decodeText.join(spacer);
   };
 
@@ -44,8 +42,8 @@ class App extends Component {
   };
 
   render() {
-    const code = this.state.code;
-    const inputValue = this.state.inputValue;
+    let code, inputValue;
+    ({code,inputValue} = {code : this.state.code, inputValue : this.state.inputValue})
     const textCode = code === "morse" ? this.getText(inputValue) : inputValue;
     const morseCode =
       code === "text" ? this.getMorseCode(inputValue) : inputValue;
